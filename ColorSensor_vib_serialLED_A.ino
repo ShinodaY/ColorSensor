@@ -32,6 +32,7 @@
 
 #include <Wire.h>
 #include <GroveColorSensor.h>
+#include <MsTimer2.h>
 
 static boolean output = HIGH;
 
@@ -58,6 +59,7 @@ uint8_t VibRedPin = 6;   //PWM output to vibration motor for RED
 uint8_t VibGreenPin = 5;  //PWM output to vibration motor for GREEN
 uint8_t VibBluePin = 3;  //PWM output to vibration motor for BLUE
 
+uint8_t vibratorNumber = 0;  //MsTimer switch ON vibration motors one by one periodically
 
 void setup()
 {
@@ -66,6 +68,9 @@ void setup()
 	Wire.begin();
   strip.begin();
   strip.show(); // Initialize all pixels to 'off'
+  MsTimer2::set(500, vibratorON); // 500ms period
+  MsTimer2::start();
+
  
 }
 
@@ -107,3 +112,27 @@ void loop()
 		}
 	}
 }
+
+void vibratorON() 	//バイブレーターがPWM120/255未満では起動失敗可能性あり。定期的に起動させて低速運転状態にしておく。
+{
+  uint8_t i;
+  uint8_t n;
+  i = vibratorNumber % 3;
+  switch (i) {
+    case 0:
+      n = VibRedPin;
+      break;
+    case 1:
+      n = VibGreenPin;
+      break;
+    case 2:
+      vibratorNumber = 0;
+      n = VibBluePin;
+      break;
+  }
+  analogWrite(n, 150);	// PWM 150/255で確実にバイブレーターは起動する
+  delay(200);	// 起動したと振動ではわからない時間に設定
+  analogWrite(n, 70);	// PWM 70/255で確実にバイブレーターは起動していても感じない状態にまで下げる
+  ++vibratorNumber;
+}
+
