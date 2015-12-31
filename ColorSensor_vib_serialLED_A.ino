@@ -126,13 +126,19 @@ void vibratorON() 	//バイブレーターがPWM120/255未満では起動失敗�
       n = VibGreenPin;
       break;
     case 2:
-      vibratorNumber = 0;
       n = VibBluePin;
       break;
   }
   analogWrite(n, 150);	// PWM 150/255で確実にバイブレーターは起動する
-  delay(200);	// 起動したと振動ではわからない時間に設定
-  analogWrite(n, 70);	// PWM 70/255で確実にバイブレーターは起動していても感じない状態にまで下げる
-  ++vibratorNumber;
+  delay(50);	// 起動したと振動ではわからない時間を設定、消費電力との見合いで。
+  analogWrite(n, 70);	// PWM 70/255で確実にバイブレーターは起動していても感じない状態にまで下げる、消費電力との見合いで。
+
+  if(vibratorNumber == 2){
+    vibratorNumber = 0;
+  }
+  else{
+    vibratorNumber = vibratorNumber + 1;
+  }
+
 }
 
