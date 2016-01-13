@@ -79,9 +79,9 @@ void loop()
   while(1)
   {
     colorSensor.readRGB(&red, &green, &blue); //Read RGB values to variables.
-    redC   = constrain(  red * 2.22, 0, 255); //白色折り紙の読み取り値を200にする補正値
-    greenC = constrain(green * 2.38, 0, 255);
-    blueC  = constrain( blue * 8.70, 0, 255);
+    redC   = constrain(  red * 3.37, 0, 255); //補正後
+    greenC = constrain(green * 4.00, 0, 255);
+    blueC  = constrain( blue * 7.57, 0, 255);
 
     //analogWrite value: between 0 (always off) and 255 (always on).
     analogWrite(VibRedPin,   redC);
